@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rishu ❤️ Amalu</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #ffe6ef;
+    overflow: hidden;
+    text-align: center;
+  }
+  section {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.6s ease;
+  }
+  section.active {
+    display: flex;
+    opacity: 1;
+  }
+  h1, h2, p {
+    color: #ff5c8d;
+    margin: 10px;
+  }
+  button {
+    background: #ff9bbb;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #ff5c8d;
+  }
+  .hearts {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+  .heart {
+    position: absolute;
+    color: #ff7fa8;
+    animation: float 6s linear infinite;
+    font-size: 20px;
+    opacity: 0.6;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+  }
+  #finalMessage {
+    white-space: pre-line;
+    max-width: 80%;
+    line-height: 1.8;
+    color: #ff4f81;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  footer {
+    margin-top: 30px;
+    color: #ff4f81;
+    font-size: 1.1rem;
+  }
+</style>
+</head>
+<body>
+  <audio id="bgm" src="music.mp3" preload="auto" loop></audio>
+  <div class="hearts" id="hearts"></div>
+
+  <!-- Intro -->
+  <section id="intro" class="active">
+    <h1>Hi Rishu 💖</h1>
+    <p>Someone special made this for you...</p>
+    <button id="beginBtn">Click to Begin ❤️</button>
+  </section>
+
+  <!-- Quiz -->
+  <section id="quiz">
+    <h2 id="questionText"></h2>
+    <div id="options"></div>
+    <button id="nextBtn" style="display:none;">Next ➡️</button>
+  </section>
+
+  <!-- Funny -->
+  <section id="fun">
+    <h2>Do you love me? 💞</h2>
+    <div>
+      <button id="yesBtn">Yes ❤️</button>
+      <button id="noBtn" style="position:absolute;">No 😜</button>
+    </div>
+  </section>
+
+  <!-- Final -->
+  <section id="final">
+    <div id="finalMessage">
+      <!-- 🌸 Your custom message -->
+      Ente Rishottyikk, amalettante vaka first anniversary gift enn parayan pattila but oru memory gift. As a engineer athum koode ittil itt korach funny akkam enn vech. aa karyathilott povam
+
+      Ente koode itra days ninnathil nyn valare happy ann. Ente ella happinessilum sadnessilum tensionilum ellam ente koode ninnathil i am very much happy. Enikk angane valys message akkan onnum ariyilengilum vayil verunna karyangal oke parayunnu enn matram. Etra doore annelum nee ente koode ondenn ennik ariya. Nee ondello enn oru ittil ann nyn pinne elladam pidich nikkune. Nyn arta perfect alla enn ariyam, ennalum i am trying my best to make you happy. Nee happy ayi irrikunnat ann ente santhosham. Anyway nammade first anniversary ingane aakoshikam, inni ollat orumich irrun akoshikan prarthika. Gift okk teranam enn ond but ippo nammal paladatt alle so ellam koode neente bdaykk terram nyn heheheh.
+
+      Entayalum once again Happy Anniversary my little cutie baby 💖💖💖
+    </div>
+    <footer>
+      — With love, Amalu 💖<br>
+      Rishu & Amalu ❤️ 1 Year of Love
+    </footer>
+  </section>
+
+  <script>
+    const sections = ["intro","quiz","fun","final"];
+    let currentSection = 0;
+
+    function showSection(i){
+      sections.forEach(id => document.getElementById(id).classList.remove('active'));
+      document.getElementById(sections[i]).classList.add('active');
+    }
+
+    // Floating hearts
+    function startHearts(){
+      const hearts = document.getElementById('hearts');
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerText = '💖';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = 15 + Math.random() * 25 + 'px';
+        hearts.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+      }, 500);
+    }
+
+    const audio = document.getElementById('bgm');
+    document.getElementById('beginBtn').addEventListener('click', () => {
+      startHearts();
+      audio.play().catch(()=>{});
+      showSection(1);
+      loadQuestion();
+    });
+
+    // Quiz
+    const questions = [
+      {
+        q: "Who said 'I love you' first? ❤️",
+        a: ["Amalu","Rishu","Both at once"],
+        correct: "Both at once"
+      },
+      {
+        q: "Who’s more romantic? 😍",
+        a: ["Amalu (obivious)","Rishu","Equal"],
+        correct: "Amalu (obivious)"
+      },
+      {
+        q: "What’s our favourite time together?",
+        a: ["Video calls","Long texts","Fights 😂"],
+        correct: "Fights 😂"
+      }
+    ];
+    let qIndex = 0;
+
+    function loadQuestion(){
+      const q = questions[qIndex];
+      document.getElementById('questionText').textContent = q.q;
+      const opts = document.getElementById('options');
+      opts.innerHTML = "";
+      q.a.forEach(ans => {
+        const btn = document.createElement('button');
+        btn.textContent = ans;
+        btn.onclick = () => {
+          if(ans===q.correct){
+            btn.style.background="#ff5c8d";
+          } else {
+            btn.style.background="#999";
+          }
+          document.getElementById('nextBtn').style.display='inline-block';
+        };
+        opts.appendChild(btn);
+      });
+    }
+
+    document.getElementById('nextBtn').addEventListener('click',()=>{
+      qIndex++;
+      if(qIndex<questions.length){
+        loadQuestion();
+        document.getElementById('nextBtn').style.display='none';
+      } else {
+        showSection(2);
+      }
+    });
+
+    // Funny screen
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    noBtn.addEventListener('mouseover', () => {
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 100);
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+    });
+    yesBtn.addEventListener('click', () => {
+      showSection(3);
+    });
+  </script>
+</body>
+</html>
