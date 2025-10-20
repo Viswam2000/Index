@@ -73,6 +73,23 @@
     color: #ff4f81;
     font-size: 1.1rem;
   }
+  .wrong {
+    animation: shake 0.3s;
+    background: #999 !important;
+  }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  #tryAgain {
+    color: #ff4f81;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -90,7 +107,7 @@
   <section id="quiz">
     <h2 id="questionText"></h2>
     <div id="options"></div>
-    <button id="nextBtn" style="display:none;">Next ➡️</button>
+    <p id="tryAgain">❌ Oops! Try again 😜</p>
   </section>
 
   <!-- Funny -->
@@ -105,7 +122,6 @@
   <!-- Final -->
   <section id="final">
     <div id="finalMessage">
-      <!-- 🌸 Your custom message -->
       Ente Rishottyikk, amalettante vaka first anniversary gift enn parayan pattila but oru memory gift. As a engineer athum koode ittil itt korach funny akkam enn vech. aa karyathilott povam
 
       Ente koode itra days ninnathil nyn valare happy ann. Ente ella happinessilum sadnessilum tensionilum ellam ente koode ninnathil i am very much happy. Enikk angane valys message akkan onnum ariyilengilum vayil verunna karyangal oke parayunnu enn matram. Etra doore annelum nee ente koode ondenn ennik ariya. Nee ondello enn oru ittil ann nyn pinne elladam pidich nikkune. Nyn arta perfect alla enn ariyam, ennalum i am trying my best to make you happy. Nee happy ayi irrikunnat ann ente santhosham. Anyway nammade first anniversary ingane aakoshikam, inni ollat orumich irrun akoshikan prarthika. Gift okk teranam enn ond but ippo nammal paladatt alle so ellam koode neente bdaykk terram nyn heheheh.
@@ -151,21 +167,11 @@
 
     // Quiz
     const questions = [
-      {
-        q: "Who said 'I love you' first? ❤️",
-        a: ["Amalu","Rishu","Both at once"],
-        correct: "Both at once"
-      },
-      {
-        q: "Who’s more romantic? 😍",
-        a: ["Amalu (obivious)","Rishu","Equal"],
-        correct: "Amalu (obivious)"
-      },
-      {
-        q: "What’s our favourite time together?",
-        a: ["Video calls","Long texts","Fights 😂"],
-        correct: "Fights 😂"
-      }
+      { q: "Who said 'I love you' first? ❤️", a: ["Amalu","Rishu","Both at once"], correct: "Both at once" },
+      { q: "Who’s more romantic? 😍", a: ["Amalu (obvious)","Rishu","Equal"], correct: "Amalu (obvious)" },
+      { q: "What’s our favourite time together?", a: ["Video calls","Long texts","Fights 😂"], correct: "Fights 😂" },
+      { q: "Which place you like the most when together?", a: ["Vettukar Church","Kovalam Beach","Veli tourist park","All are correct"], correct: "All are correct" },
+      { q: "What is the most frequently used words among us?", a: ["I love you","Umma","Stupid","Poyi kidann Ornagu"], correct: "Poyi kidann Ornagu" }
     ];
     let qIndex = 0;
 
@@ -174,30 +180,32 @@
       document.getElementById('questionText').textContent = q.q;
       const opts = document.getElementById('options');
       opts.innerHTML = "";
+      document.getElementById('tryAgain').style.display = "none";
       q.a.forEach(ans => {
         const btn = document.createElement('button');
         btn.textContent = ans;
-        btn.onclick = () => {
-          if(ans===q.correct){
-            btn.style.background="#ff5c8d";
-          } else {
-            btn.style.background="#999";
-          }
-          document.getElementById('nextBtn').style.display='inline-block';
-        };
+        btn.onclick = () => checkAnswer(btn, ans === q.correct);
         opts.appendChild(btn);
       });
     }
 
-    document.getElementById('nextBtn').addEventListener('click',()=>{
-      qIndex++;
-      if(qIndex<questions.length){
-        loadQuestion();
-        document.getElementById('nextBtn').style.display='none';
+    function checkAnswer(btn, correct){
+      const tryAgain = document.getElementById('tryAgain');
+      if(correct){
+        btn.style.background = "#ff5c8d";
+        setTimeout(() => {
+          qIndex++;
+          if(qIndex < questions.length){
+            loadQuestion();
+          } else {
+            showSection(2);
+          }
+        }, 700);
       } else {
-        showSection(2);
+        btn.classList.add("wrong");
+        tryAgain.style.display = "block";
       }
-    });
+    }
 
     // Funny screen
     const noBtn = document.getElementById('noBtn');
